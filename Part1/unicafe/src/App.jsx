@@ -1,7 +1,8 @@
 import { useState } from "react";
 const Statistics = (props) => {
-  {
-    console.log("props :", props);
+  console.log("props :", props);
+  if (props.all===0) {
+   return <p>no feedback provided</p>
   }
   return (
     <div>
@@ -13,7 +14,7 @@ const Statistics = (props) => {
         all : {props.all} <br />
         average : {props.average}
         <br />
-        positive : {props.positive}{" "}
+        positive : {props.positive}
       </p>
     </div>
   );

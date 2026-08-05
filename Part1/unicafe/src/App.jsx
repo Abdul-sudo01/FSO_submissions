@@ -1,31 +1,41 @@
 import { useState } from "react";
+
+const Button = (props) => {
+  return (
+    
+      <button onClick={props.handleClick}> {props.text} </button>
+    
+  );
+};
+
+const StatisticLine = (props) => {
+  return (
+    <div>
+      {props.text} : {props.value} 
+    </div>
+  );
+};
+
 const Statistics = (props) => {
-  console.log("props :", props);
-  if (props.all===0) {
-   return <p>no feedback provided</p>
+  if (props.all === 0) {
+    return <p>no feedback provided</p>;
   }
   return (
     <div>
-      <p>
-        good : {props.good} <br />
-        neutral : {props.neutral}
-        <br />
-        bad : {props.bad} <br />
-        all : {props.all} <br />
-        average : {props.average}
-        <br />
-        positive : {props.positive}
-      </p>
+      <StatisticLine text="good" value={props.good} />
+      <StatisticLine text="neutral" value={props.neutral} />
+      <StatisticLine text="bad" value={props.bad} />
+      <StatisticLine text="all" value={props.all} />
+      <StatisticLine text="average" value={props.average} />
+      <StatisticLine text="positive" value={props.positive} />
     </div>
   );
 };
 
 const App = () => {
-  // save clicks of each button to its own state
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-  // const [all , setall] = useState(0)
 
   const all = good + bad + neutral;
   const average = all === 0 ? 0 : (good - bad) / all;
@@ -43,15 +53,17 @@ const App = () => {
     setBad(bad + 1);
     console.log(bad + 1);
   };
+
   return (
     <div>
       <h1>Give Feedback</h1>
-      <button onClick={handleGoodClick}>Good</button>
-      <button onClick={handleNeutral}>Neutral </button>
-      <button onClick={handleBad}>Bad</button>
+      <Button handleClick={handleGoodClick} text="Good" />
+      <Button handleClick={handleNeutral} text="Neutral" />
+      <Button handleClick={handleBad} text="Bad" />
+
       <h1>Statistics</h1>
       <Statistics
-        good={good}
+        good={good} 
         neutral={neutral}
         bad={bad}
         all={all}

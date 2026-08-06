@@ -1,7 +1,12 @@
 import { useState } from "react";
-const Button = (props) =>  { return(<div> <button
- onClick={props.nextAnecdote} >  {props.text}</button>   </div>
-)}
+// console.log(arr)
+
+const Button = (props) =>  { return<div> 
+  <button
+  onClick={props.handleClick} >  {props.text} </button>
+
+  </div>
+}
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often.",
@@ -13,18 +18,24 @@ const App = () => {
     "Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.",
     "The only way to go fast, is to go well.",
   ];
-
   const [selected, setSelected] = useState(0);
- 
-  const nextAnecdote = () => {
-    setSelected(selected + 1)
-   console.log(setSelected)}
+  const [arr, newArr] = useState(new Array(anecdotes.length).fill(0))
 
+  const nextAnecdote = () => {
+    setSelected((selected + 1) % anecdotes.length )
+  }
+  const handleArr =()=>{
+  const copy =[...arr]
+        copy[selected] += 1
+        console.log(copy) 
+       newArr (copy)
+}
   return (
     <div>
       {anecdotes[selected]}
-      <Button text="next ancedote" nextAnecdote={nextAnecdote} />
-
+      <Button text="vote" handleClick={handleArr} />
+      <Button text="next ancedote" handleClick={nextAnecdote} />
+        
     </div>
   );
 };

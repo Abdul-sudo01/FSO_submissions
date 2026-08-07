@@ -1,12 +1,9 @@
 import { useState } from "react";
 // console.log(arr)
 
-const Button = (props) =>  { return<div> 
-  <button
-  onClick={props.handleClick} >  {props.text} </button>
-
-  </div>
-}
+const Button = (props) => {
+  return <button onClick={props.handleClick}> {props.text}</button>;
+};
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often.",
@@ -19,23 +16,42 @@ const App = () => {
     "The only way to go fast, is to go well.",
   ];
   const [selected, setSelected] = useState(0);
-  const [arr, newArr] = useState(new Array(anecdotes.length).fill(0))
+  const [arr, newArr] = useState(new Array(anecdotes.length).fill(0));
 
   const nextAnecdote = () => {
-    setSelected((selected + 1) % anecdotes.length )
-  }
-  const handleArr =()=>{
-  const copy =[...arr]
-        copy[selected] += 1
-        console.log(copy) 
-       newArr (copy)
-}
+    setSelected(selected + 1);
+  };
+
+  const handleArr = () => {
+    const copy = [...arr];
+    copy[selected] += 1;
+    console.log(copy);
+    newArr(copy);
+  };
+
+  const totalVotes = Math.max(...arr);
+  console.log(totalVotes);
+
+  const indexOfAnecdote = arr.indexOf(totalVotes);
+  console.log(indexOfAnecdote);
+
+  const winnerAnecdote = anecdotes[indexOfAnecdote];
+  console.log(winnerAnecdote);
+
   return (
     <div>
-      {anecdotes[selected]}
+      <h1>Anecdote of the day</h1>
+      <div>{anecdotes[selected]}</div>
       <Button text="vote" handleClick={handleArr} />
       <Button text="next ancedote" handleClick={nextAnecdote} />
-        
+
+      <h1>Anecdote with most votes</h1>
+      <div>
+        <p>
+          {winnerAnecdote} <br />
+          {totalVotes}
+        </p>
+      </div>
     </div>
   );
 };

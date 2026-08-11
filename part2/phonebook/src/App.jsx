@@ -7,17 +7,22 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault();
-    // console.log(addName.target.value);
     const personObject = {
       name: newName,
       id: persons.length + 1,
     };
-    setPersons(persons.concat(personObject));
+    const checkPerson = persons.some((person) => person.name === newName);
+
+    if (checkPerson) {
+      return alert(`${newName} already exists`);
+    } else {
+      setPersons(persons.concat(personObject));
+    }
     setNewName("");
   };
+
   const handleNameChange = (event) => {
     setNewName(event.target.value);
-    console.log(event.target.value);
   };
 
   return (
@@ -34,9 +39,9 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-         {persons.map((each) =>
-         <li key={each.name} > {(each.name)} </li>
-          )} 
+        {persons.map((each) => (
+          <li key={each.name}> {each.name} </li>
+        ))}
       </ul>
     </div>
   );

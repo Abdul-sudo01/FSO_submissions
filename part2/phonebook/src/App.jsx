@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Filter } from "./components/Filter";
 import { PersonForm } from "./components/PersonForm";
 import { DisplayList } from "./components/DisplayList";
+import axios from "axios";
 
 const App = () => {
   const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
@@ -9,15 +10,22 @@ const App = () => {
   const [phone, setPhone] = useState("");
   const [filter, setFilter] = useState("");
 
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      console.log(response.data);
+      setPersons(response.data);
+    });
+  }, []);
+
   const handleFilter = (event) => setFilter(event.target.value);
 
   const addName = (event) => {
     event.preventDefault();
-    const personObject ={
-      name:newName ,
-      phone:phone ,
-     id: persons.length + 1,
-    }
+    const personObject = {
+      name: newName,
+      phone: phone,
+      id: persons.length + 1,
+    };
     const checkPerson = persons.some((person) => person.name === newName);
     if (checkPerson) {
       return alert(`${newName} already exists`);
@@ -50,7 +58,7 @@ const App = () => {
         handlePhone={handlePhone}
       />
       <h2>Numbers</h2>
-      <DisplayList persons={persons} filter={filter}  />
+      <DisplayList persons={persons} filter={filter} />
     </div>
   );
 };

@@ -1,58 +1,29 @@
 import { useEffect, useState } from "react";
-import { PersonCalculations } from "./components/PersonCalculations";
+import { PersonForm } from "./components/PersonForm";
 import { DisplayList } from "./components/DisplayList";
-import { Filter } from "./components/DisplayList";
-
-import axios from "axios";
-
+import { Filter } from "./components/Filter";
+import   personService  from "./service/persons";
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filter, setFilter] = useState("");
-
+ 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
-      console.log(response.data);
-    });
+    personService.getAll().then((initialPersons) => setPersons(initialPersons));
   }, []);
 
-  const addName = ({name , number}) => {
-    const cleanName = name.trim();
-    if (cleanName === "") return alert(`enter a name `);
+  const savePerson = ( personObject ) =>
+    personService.create(personObject).then((returnedPerson) =>
+      setPersons(persons.concat(returnedPerson)),
+    );
 
-    const verifyPhone = /^(?:\s*\d\s*){11}$/.test(number);
-    if (!verifyPhone) return alert('enter complete 11 digit phone Number');
-
-    const formattedPhone = number
-      .replace(/\s+/g, "")
-      .replace(/^(\d{4})(\d{7})$/, "$1 $2");
-      
-    const checkPerson = persons.some((person) => person.name === cleanName);
-      if (checkPerson) return alert(`${cleanName} already exists`);
-  
-    const checkPhone = persons.some((checkNumber) => checkNumber.number === formattedPhone,);
-      if (checkPhone) return alert(`${formattedPhone} already exists`);
-    
-      const personObject = {
-      name: cleanName,
-      number: formattedPhone,
-    };
-
-
-    axios
-      .post("http://localhost:3001/persons", personObject)
-      .then((response) => {
-        setPersons(persons.concat(response.data));
-      });
-  };
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter filter ={filter}  setFilter ={setFilter} />
+      <Filter filter={filter} setFilter={setFilter} />
       <h2>add a new </h2>
-      <PersonCalculations addName={addName} />
+      <PersonForm persons={persons} savePerson={savePerson} />
       <h2>Numbers</h2>
-      <DisplayList persons={persons} filter={filter}  />
+      <DisplayList persons={persons} filter={filter} />
     </div>
   );
 };

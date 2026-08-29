@@ -39,6 +39,11 @@
       "name": "hi",
       "number": "1111 1111112",
       "id": "0ZiDIaSrsRQ"
+    },
+    {
+      "name": "qwerty",
+      "number": "0000 0000000",
+      "id": "PelN6YQgTxM"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

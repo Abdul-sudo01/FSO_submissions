@@ -3,9 +3,6 @@ const PersonForm = ({ persons , savePerson }) => {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
 
-  const handleNameChange = (event) => setName(event.target.value);
-  const handlePhone = (event) => setNumber(event.target.value);
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -28,15 +25,15 @@ const PersonForm = ({ persons , savePerson }) => {
     savePerson({ name: cleanName , number: formattedPhone })
     setName('');
     setNumber('');
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        name: <input value={name} onChange={handleNameChange} />
+        name: <input value={name} onChange = {(e)=>setName(e.target.value)} /> 
       </div>
       <div>
-        phone: <input value={number} onChange={handlePhone} />
+        phone: <input value={number} onChange = {(e)=>setNumber(e.target.value)} />
       </div>
       <div>
         <button type="submit">add</button>

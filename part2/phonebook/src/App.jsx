@@ -15,15 +15,19 @@ const App = () => {
     personService.create(personObject).then((returnedPerson) =>
       setPersons(persons.concat(returnedPerson))
     );
-const deletePerson =(id)=> personService.deletePerson(id).then(() => setPersons(persons.filter(p => p.id !== id)))
+const deletePerson = (id) => personService.deletePerson(id).then(() => setPersons(persons.filter(p => p.id !== id)))
 
+const replacePerson = ({id , number , name }) => {
+  const updatedPerson = {name , number}  
 
+  personService.update({id , updatedPerson}).then(returnedPerson => setPersons(persons.map(per=>per.id !== id ? per : returnedPerson)))
+}
   return (
     <div>
       <h2>Phonebook</h2>
       <Filter filter={filter} setFilter={setFilter} />
       <h2>add a new </h2>
-      <PersonForm persons={persons} savePerson={savePerson}   />
+      <PersonForm persons={persons} savePerson={savePerson} replacePerson={replacePerson}  />
       <h2>Numbers</h2>
       <DisplayList persons={persons} filter={filter} deletePerson = {deletePerson} />
     </div>

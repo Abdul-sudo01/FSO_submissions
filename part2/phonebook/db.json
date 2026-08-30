@@ -26,14 +26,9 @@
       "id": "ZG5K-_kcEho"
     },
     {
-      "name": "qwerty",
-      "number": "0000 0000000",
-      "id": "rJf-sle5sLg"
-    },
-    {
-      "name": "dshd",
+      "name": "SaaS",
       "number": "0000 0000001",
-      "id": "UV3P6hUWNqw"
+      "id": "Xuh5_FGF_RU"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

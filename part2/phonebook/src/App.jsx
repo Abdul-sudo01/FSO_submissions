@@ -7,7 +7,7 @@ import Notification from "./components//Notification";
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [filter, setFilter] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => setPersons(initialPersons));
@@ -27,11 +27,20 @@ const App = () => {
       });
   };
 
-  const deletePerson = (id) => 
-    personService.deletePerson(id).then(() => {
-      setPersons(persons.filter((p) => p.id !== id));
-    
-    });
+  const deletePerson = (id) => {
+    const deletedPerson = persons.find((p) => p.id === id);
+    personService
+      .deletePerson(id)
+      .then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+        setNotification({ type: 'true' , text : `${deletedPerson.name} successfuly deleted`});
+        setTimeout(() => setNotification(null), 5000);
+      })
+      .catch(() => {
+        setNotification({ type: 'false' , text : ` ${deletedPerson.name} is already been removed from server `});
+        setTimeout(() => setNotification(null), 5000);
+      });
+  };
 
   const replacePerson = ({ id, number, name }) => {
     const updatedPerson = { name, number };
@@ -53,7 +62,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage} />
+      <Notification notification={notification} />
       <Filter filter={filter} setFilter={setFilter} />
       <h2>add a new </h2>
       <PersonForm

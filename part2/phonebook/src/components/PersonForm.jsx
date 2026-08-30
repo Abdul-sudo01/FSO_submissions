@@ -10,30 +10,26 @@ const PersonForm = ({ persons, savePerson, replacePerson }) => {
       .replace(/\s+/g, "")
       .replace(/^(\d{4})(\d{7})$/, "$1 $2");
 
-    const verifyPhone = /^(?:\s*\d\s*){11}$/.test(number);
+    const verifyPhone = /^(?:\s*\d\s*){11}$/.test(number2);
     if (!verifyPhone) {
       alert("enter complete 11 digit phone Number");
-      return setNumber(number);
+      return setNumber(number2);
     }
-
-    const formattedPhone = number2;
-    const cleanName = name.trim();
-
-    // checks below
-    if (cleanName === "") return alert(`enter a name `);
-
-    const replacePhone = persons.find((p) => p.number === formattedPhone);
+    
+    const replacePhone = persons.find((p) => p.number === number2);
     if (replacePhone) {
       const yes = window.confirm(
-        `${formattedPhone} is registered under name ${replacePhone.name} , Press continue to replace the number `,
+        `${number2} is registered under name ${replacePhone.name} , Press continue to replace the number `,
       );
       if (yes) {
-        replacePerson({ id: replacePhone.id, number, name })
+        replacePerson({ id: replacePhone.id, number: number2, name })
         return setNumber('') , setName('')
       }
     }
-    if (replacePhone) return setNumber(formattedPhone);
-
+    if (replacePhone) return setNumber(number2);
+    
+    const cleanName = name.trim();
+    if (cleanName === "") return alert(`enter a name `);
     const checkPerson = persons.some(
       (p) => p.name.toLowerCase() === cleanName.toLowerCase(),
     );
@@ -42,7 +38,7 @@ const PersonForm = ({ persons, savePerson, replacePerson }) => {
       return setName(name);
     }
     // callbacks
-    savePerson({ name: cleanName, number: formattedPhone });
+    savePerson({ name: cleanName, number: number2 });
     setName("");
     setNumber("");
   };

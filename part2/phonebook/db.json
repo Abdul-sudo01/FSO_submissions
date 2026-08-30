@@ -34,11 +34,6 @@
       "name": "dshd",
       "number": "0000 0000001",
       "id": "UV3P6hUWNqw"
-    },
-    {
-      "name": "dd",
-      "number": "0000 0000002",
-      "id": "DDJGODXzRlU"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

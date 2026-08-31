@@ -58,6 +58,11 @@ app.post("/api/persons", (req,res) => {
   if (!body.name || !body.number) {
    return res.status(404).json({error: ' Incomplete information provided!'})
   }
+  const nameCheck = persons.find(p => p.name === body.name)
+  if (nameCheck) {
+    return res.status(404).json({error: 'name must be unique!'})
+    
+  }
   const person = {
       name : body.name,
       number : body.number, 

@@ -53,21 +53,15 @@ app.delete("/api/persons/:id", (req, res) => {
   persons = persons.filter((p) => p.id !== id);
   res.status(204).end();
 })
-const generateId = () => {
-    const maxId = persons.length > 0
-    ?  Math.max(...persons.map(p=>Number(p.id)))
-    : 0
-  return String(maxId +1)    
-}
 app.post("/api/persons", (req,res) => {
   const body = req.body
-  if (!body.name) {
-   return res.status(404).json({error: 'name or Number is missing!'})
-  }  
+  if (!body.name || !body.number) {
+   return res.status(404).json({error: ' Incomplete information provided!'})
+  }
   const person = {
       name : body.name,
       number : body.number, 
-      id : generateId()
+      id :  String(Math.floor(Math.random()*100000000))
   }
    persons = persons.concat(person)
     res.json(person)

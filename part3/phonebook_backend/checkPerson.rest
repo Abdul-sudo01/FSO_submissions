@@ -1,9 +1,3 @@
-get http://localhost:3001/api/persons
+GET http://localhost:3001/api/persons/5
 ###
-post http://localhost:3001/api/persons
-Content-Type: application/json
-
-{
-    "name": "Arto Hellas",
-    "number": "040-123456"
-}
+DELETE http://localhost:3001/api/persons/5

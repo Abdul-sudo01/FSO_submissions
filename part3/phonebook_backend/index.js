@@ -1,6 +1,8 @@
 const express = require("express");
+const morgan = require("morgan")
 const app = express();
  app.use(express.json())
+ app.use(morgan('tiny'))
 
 let persons = [
   {
@@ -38,7 +40,6 @@ app.get("/info", (req,res) => {
     <div> ${new Date()} </div>`
    )
 })
-
 app.get("/api/persons/:id", (req, res) => {
   const id = req.params.id;
   const person = persons.find((p) => p.id === id);

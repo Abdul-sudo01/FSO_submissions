@@ -1,50 +1,46 @@
+require("dotenv").config();
+const Persons = require("./models/persons");
 const express = require("express");
-const morgan = require("morgan")
+const mongoose = require("mongoose");
+const morgan = require("morgan");
 const app = express();
-app.use(express.json())
+const cors = require('cors')
+app.use(express.json());
+app.use(cors())
 
-morgan.token( 'PORT' , (req,res) => `Server running on port: ${PORT}`)
- app.use(morgan(':PORT'))
-morgan.token( 'postReq' , (req,res) => JSON.stringify(req.body)) 
- app.use(morgan(':method :url :status :res[response-length] :response-time ms  :postReq'))
+morgan.token("PORT", (req, res) => `Server running on port: ${PORT}`);
+app.use(morgan(":PORT"));
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "0407 1234562",
-    id: "1",
+morgan.token("postReq", (req, res) => JSON.stringify(req.body));
+app.use(
+  morgan(
+    ":method :url :status :res[response-length] :response-time ms  :postReq",
+  ),
+);
+
+mongoose.set("toJSON", {
+  transform: (document, receivedObject) => {
+    receivedObject.id = receivedObject._id.toString();
+    delete receivedObject._id;
+    delete receivedObject.__v;
   },
-  {
-    name: "Ada Lovelace",
-    number: "3944 5323542",
-    id: "2",
-  },
-  {
-    name: "Dan Abramov",
-    number: "1243 2343451",
-    id: "3",
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "3923 6423122",
-    id: "4",
-  },
-  {
-    name: "asdf",
-    number: "1234 5678910",
-    id: "5",
-  },
-];
-app.get("/api/persons", (req, res) => {
-  res.send(persons);
 });
-app.get("/info", (req,res) => {
-  res.send( 
-   ` <div> Phonebook has info for  ${persons.length}  people </div> <br /> 
-    <div> ${new Date()} </div>`
-   )
-})
-app.get("/api/persons/:id", (req, res) => {
+
+app.get("/persons", (req, res) => {
+  Persons.find({}).then((p) => {
+    console.log(p);
+    res.json(p);
+  });
+});
+
+// app.get("/info", (req, res) => {
+//   res.send(
+//     ` <div> Phonebook has info for  ${persons.length}  people </div> <br /> 
+//     <div> ${new Date()} </div>`,
+//   );
+// });
+
+app.get("/persons/:id", (req, res) => {
   const id = req.params.id;
   const person = persons.find((p) => p.id === id);
   if (person) {
@@ -53,41 +49,29 @@ app.get("/api/persons/:id", (req, res) => {
     res.status(404).end();
   }
 });
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/persons/:id", (req, res) => {
   const id = req.params.id;
-  persons = persons.filter((p) => p.id !== id)
+  persons = persons.filter((p) => p.id !== id);
   res.status(204).end();
-})
-app.post("/api/persons", (req,res) => {
-  const body = req.body
-  if (!body.name || !body.number) {
-   return res.status(404).json({error: ' Incomplete information provided!'})
-  }
-  const nameCheck = persons.find(p => p.name === body.name)
-  if (nameCheck) {
-    return res.status(404).json({error: 'name must be unique!'})
-  }
-  const person = {
-      name : body.name,
-      number : body.number, 
-      id :  String(Math.floor(Math.random()*100000000))
-  }
-   persons = persons.concat(person)
-   res.json(person)
-
-  })
+});
+app.post("/persons", async (req, res) => {
+  const body = req.body;
   
+  if (!body.name) return res.status(400).json({ error: "provide name to proceed!" });
+  if (!body.number) return res.status(400).json({ error: "provide Number to proceed!" });
+  
+  const name = body.name;
+  const number = body.number;
+  const person = new Persons({ name , number })
 
-const PORT = 3001;
+  const nameCheck = await Persons.findOne({ name })
+  console.log("found person :", nameCheck);
+  if (nameCheck) return res.status(400).json({error : 'name must be unique'})  
+  
+res.status(201).json( await person.save());
+});
+
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
-  console.log(`server running on port : ${PORT}`)
-})
-
-
-
-
-
-
-
-
-
+  console.log(`server running on port : ${PORT}`);
+});

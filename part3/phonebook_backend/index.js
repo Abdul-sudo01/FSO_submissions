@@ -16,7 +16,7 @@ app.use(
   morgan(
     ":method :url :status :res[response-length] :response-time ms  :postReq",
   ),
-);
+)
 
 mongoose.set("toJSON", {
   transform: (document, receivedObject) => {
@@ -79,4 +79,4 @@ app.use(errorHandler);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`server running on port : ${PORT}`);
-});
+})

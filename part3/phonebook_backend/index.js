@@ -32,14 +32,14 @@ app.get("/persons", (req, res) => {
     res.json(p);
   });
 });
-app.get("/persons/:id", (req, res) => {
+app.get("/persons/:id", async (req, res , next) => {
+  try {
   const id = req.params.id;
-  const person = persons.find((p) => p.id === id);
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
+  const person =  await Persons.findById(id)
+  console.log(person)
+   if (!person) return res.status(404).end()
+  res.json(person);
+  } catch (error) {next(error)}
 });
 app.delete("/persons/:id", async (req, res, next) => {
   try {
@@ -67,7 +67,6 @@ app.put("/persons/:id", async (req, res, next) => {
     next(error);
   }
 });
-
 app.post("/persons", async (req, res) => {
   const body = req.body;
 
@@ -79,13 +78,13 @@ app.post("/persons", async (req, res) => {
   const name = body.name;
   const number = body.number;
 
+  const person = new Persons({ name, number });
+  res.status(201).json(await person.save());
+
   // const nameCheck = await Persons.findOne({ name });
   // console.log("found person :", nameCheck);
   // if (nameCheck)
   //   return res.status(400).json({ error: "name must be unique" });
-
-  const person = new Persons({ name, number });
-  res.status(201).json(await person.save());
 });
 
 const errorHandler = (error, req, res, next) => {

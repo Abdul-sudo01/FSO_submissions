@@ -2,6 +2,10 @@ GET http://localhost:3001/persons
 ###
 DELETE http://localhost:3001/persons/6a9d37378eefadf28edfad17
 ###
+PUT http://localhost:3001/persons/6a9ea3fd9857e7ed2697ebba
+
+
+###
 POST http://localhost:3001/persons
 Content-Type: application/json
 

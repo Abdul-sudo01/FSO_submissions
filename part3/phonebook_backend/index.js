@@ -16,7 +16,7 @@ app.use(
   morgan(
     ":method :url :status :res[response-length] :response-time ms  :postReq",
   ),
-)
+);
 
 mongoose.set("toJSON", {
   transform: (document, receivedObject) => {
@@ -51,6 +51,23 @@ app.delete("/persons/:id", async (req, res, next) => {
     next(error);
   }
 });
+app.put("/persons/:id", async (req, res, next) => {
+  try {
+    const { name, number } = req.body;
+    const id = req.params.id;
+    const update = await Persons.findByIdAndUpdate(
+      id,
+      { name, number },
+      { new: true, runValidators: true },
+    );
+    console.log("update :-", update);
+    if (!update) return res.status(404).end();
+    res.json(update);
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.post("/persons", async (req, res) => {
   const body = req.body;
 
@@ -61,12 +78,13 @@ app.post("/persons", async (req, res) => {
 
   const name = body.name;
   const number = body.number;
+
+  // const nameCheck = await Persons.findOne({ name });
+  // console.log("found person :", nameCheck);
+  // if (nameCheck)
+  //   return res.status(400).json({ error: "name must be unique" });
+
   const person = new Persons({ name, number });
-
-  const nameCheck = await Persons.findOne({ name });
-  console.log("found person :", nameCheck);
-  if (nameCheck) return res.status(400).json({ error: "name must be unique" });
-
   res.status(201).json(await person.save());
 });
 
@@ -79,4 +97,4 @@ app.use(errorHandler);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`server running on port : ${PORT}`);
-})
+});
